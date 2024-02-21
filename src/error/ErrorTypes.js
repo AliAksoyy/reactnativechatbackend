@@ -19,6 +19,10 @@ const ErrorTypes = {
     status: 401,
     message: "USER_NOT_FOUND",
   },
+  PASSWORD_MISMATCH: {
+    status: 401,
+    message: "PASSWORD_MISMATCH",
+  },
 };
 
 module.exports.ErrorTypes = ErrorTypes;

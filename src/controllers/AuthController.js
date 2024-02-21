@@ -8,14 +8,16 @@ const {
 class AuthController {
   static register = expressAsyncHandler(async (req, res) => {
     const { email, password } = req.body;
-    const response = await registerService({ email, password });
-    res.json(response);
+    const { token, ...response } = await registerService({ email, password });
+
+    res.cookie("token", token).json(response);
   });
   static login = expressAsyncHandler(async (req, res) => {
     const { email, password } = req.body;
 
-    const {} = await loginService({ email, password });
-    res.json(response);
+    const { token, ...response } = await loginService({ email, password });
+
+    res.cookie("token", token).json(response);
   });
   static getProfile = expressAsyncHandler(async (req, res) => {
     const { email, password } = req.body;

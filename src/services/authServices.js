@@ -15,9 +15,11 @@ const registerService = async ({ email, password }) => {
   }
 
   const user = new UserModel({ email, password });
+  const token = createCookie({ email: user.email, createdTime: Date.now() });
+
   await user.save();
 
-  return { success: true, data: user };
+  return { success: true, data: user, token };
 };
 const loginService = async ({ email, password }) => {
   const user = await UserModel.findOne({ email });
@@ -26,11 +28,15 @@ const loginService = async ({ email, password }) => {
     throw new CustomError(ErrorTypes.USER_NOT_FOUND);
   }
 
-  const cookie = createCookie({ email: user.email, createdTime: Date.now() });
+  if (!user.comparePassword(password)) {
+    throw new CustomError(ErrorTypes.PASSWORD_MISMATCH);
+  }
+
+  const token = createCookie({ email: user.email, createdTime: Date.now() });
 
   await user.save();
 
-  return { success: true, data: cookie, user };
+  return { success: true, data: user, token };
 };
 const getProfileService = async (email, password) => {};
 
