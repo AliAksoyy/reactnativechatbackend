@@ -22,12 +22,11 @@ const registerService = async ({ email, password }) => {
   return { success: true, data: user, token };
 };
 const loginService = async ({ email, password }) => {
-  const user = await UserModel.findOne({ email });
+  const user = await UserModel.findOne({ email }).select("email password");
 
   if (!user) {
     throw new CustomError(ErrorTypes.USER_NOT_FOUND);
   }
-
   if (!user.comparePassword(password)) {
     throw new CustomError(ErrorTypes.PASSWORD_MISMATCH);
   }
