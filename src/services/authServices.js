@@ -37,6 +37,8 @@ const loginService = async ({ email, password }) => {
 
   return { success: true, data: user, token };
 };
-const getProfileService = async (email, password) => {};
+const getProfileService = async (user) => {
+  return { success: true, data: user };
+};
 
 module.exports = { registerService, loginService, getProfileService };

@@ -11,6 +11,8 @@ const createCookie = (data) => {
   const token = jwt.sign({ ...data }, privateKey);
   return token;
 };
-const decodeToken = () => {};
+const decodeToken = (token) => {
+  return jwt.decode(token, privateKey);
+};
 
 module.exports = { createCookie, decodeToken };

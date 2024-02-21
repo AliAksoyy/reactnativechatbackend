@@ -20,9 +20,9 @@ class AuthController {
     res.cookie("token", token).json(response);
   });
   static getProfile = expressAsyncHandler(async (req, res) => {
-    const { email, password } = req.body;
+    const user = req.user;
 
-    const response = await getProfileService({ email, password });
+    const response = await getProfileService(user);
     res.json(response);
   });
 }

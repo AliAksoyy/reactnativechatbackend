@@ -23,6 +23,10 @@ const ErrorTypes = {
     status: 401,
     message: "PASSWORD_MISMATCH",
   },
+  UNAUTHORIZED: {
+    status: 401,
+    message: "UNAUTHORIZED",
+  },
 };
 
 module.exports.ErrorTypes = ErrorTypes;
