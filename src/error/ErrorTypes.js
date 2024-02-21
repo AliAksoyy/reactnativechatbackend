@@ -15,6 +15,10 @@ const ErrorTypes = {
     status: 400,
     message: "EMAIL_ALREADY_REGISTERED",
   },
+  USER_NOT_FOUND: {
+    status: 401,
+    message: "USER_NOT_FOUND",
+  },
 };
 
 module.exports.ErrorTypes = ErrorTypes;
