@@ -1,6 +1,23 @@
-const { UserModel } = "../models/UserModel";
+const { UserModel } = require("../models/UserModel");
+const CustomError = require("../error/CustomError");
+const { ErrorTypes } = require("../error/ErrorTypes");
 
-const registerService = async ({ email, password }) => {};
+const registerService = async ({ email, password }) => {
+  const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+
+  if (!emailRegex.test(email)) {
+    throw new CustomError(ErrorTypes.INVALID_EMAIL);
+  }
+
+  if (await UserModel.findOne({ email }).select("email")) {
+    throw new CustomError(ErrorTypes.INVALID_EMAIL);
+  }
+
+  const user = new UserModel({ email, password });
+  await user.save();
+
+  return { success: true, data: user };
+};
 const loginService = async ({ email, password }) => {
   return { success: true, data: { email, password } };
 };

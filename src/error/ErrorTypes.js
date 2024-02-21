@@ -7,6 +7,14 @@ const ErrorTypes = {
     status: 500,
     message: "SOMETHING_WENT_WRONG",
   },
+  INVALID_EMAIL: {
+    status: 400,
+    message: "INVALID_EMAIL",
+  },
+  EMAIL_ALREADY_REGISTERED: {
+    status: 400,
+    message: "EMAIL_ALREADY_REGISTERED",
+  },
 };
 
 module.exports.ErrorTypes = ErrorTypes;
