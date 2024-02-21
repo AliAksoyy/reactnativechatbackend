@@ -10,7 +10,7 @@ const registerService = async ({ email, password }) => {
   }
 
   if (await UserModel.findOne({ email }).select("email")) {
-    throw new CustomError(ErrorTypes.INVALID_EMAIL);
+    throw new CustomError(ErrorTypes.EMAIL_ALREADY_REGISTERED);
   }
 
   const user = new UserModel({ email, password });
