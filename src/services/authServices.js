@@ -1,4 +1,9 @@
-const registerService = async () => {};
-const loginService = async () => {};
+const { UserModel } = "../models/UserModel";
 
-module.exports = { registerService, loginService };
+const registerService = async ({ email, password }) => {};
+const loginService = async ({ email, password }) => {
+  return { success: true, data: { email, password } };
+};
+const getProfileService = async (email, password) => {};
+
+module.exports = { registerService, loginService, getProfileService };
