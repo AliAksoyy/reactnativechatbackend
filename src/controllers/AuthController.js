@@ -19,6 +19,11 @@ class AuthController {
 
     res.cookie("token", token).json({ ...response, token });
   });
+  static logout = expressAsyncHandler(async (req, res) => {
+    res
+      .clearCookie("token")
+      .json({ success: true, data: "LOGOUT_SUCCESSFULLY" });
+  });
   static getProfile = expressAsyncHandler(async (req, res) => {
     const user = req.user;
 

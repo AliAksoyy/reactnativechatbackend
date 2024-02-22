@@ -6,6 +6,7 @@ const authRouter = express.Router();
 
 authRouter.route("/register").post(AuthController.register);
 authRouter.route("/login").post(AuthController.login);
+authRouter.route("/logout").post(AuthController.logout);
 authRouter
   .route("/getProfile")
   .all(authMiddleware)
