@@ -10,14 +10,18 @@ class AuthController {
     const { email, password } = req.body;
     const { token, ...response } = await registerService({ email, password });
 
-    res.cookie("token", token).json({ ...response, token });
+    res
+      .cookie("token", token, { maxAge: 1000 * 60 * 60 * 24 * 30 })
+      .json({ ...response, token });
   });
   static login = expressAsyncHandler(async (req, res) => {
     const { email, password } = req.body;
 
     const { token, ...response } = await loginService({ email, password });
 
-    res.cookie("token", token).json({ ...response, token });
+    res
+      .cookie("token", token, { maxAge: 1000 * 60 * 60 * 24 * 30 })
+      .json({ ...response, token });
   });
   static logout = expressAsyncHandler(async (req, res) => {
     res
