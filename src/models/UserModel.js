@@ -4,6 +4,11 @@ const { timeStamp } = require("console");
 
 const UserSchema = new mongoose.Schema(
   {
+    userId: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     userName: {
       type: String,
       required: true,

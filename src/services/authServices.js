@@ -2,9 +2,14 @@ const { UserModel } = require("../models/UserModel");
 const CustomError = require("../error/CustomError");
 const { ErrorTypes } = require("../error/ErrorTypes");
 const { createCookie } = require("../utils/jwtHelper");
+const { generateUserId } = require("../utils/keyGenerator");
 
 const registerService = async ({ user, email, password }) => {
   const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+
+  if (!user) {
+    throw new CustomError(ErrorTypes.USERNAME_ENTERED);
+  }
 
   if (!emailRegex.test(email)) {
     throw new CustomError(ErrorTypes.INVALID_EMAIL);
@@ -14,8 +19,13 @@ const registerService = async ({ user, email, password }) => {
     throw new CustomError(ErrorTypes.EMAIL_ALREADY_REGISTERED);
   }
 
-  const newUser = new UserModel({ userName: user, email, password });
-  const token = createCookie({ email: user.email, createdTime: Date.now() });
+  const newUser = new UserModel({
+    userId: generateUserId(),
+    userName: user,
+    email,
+    password,
+  });
+  const token = createCookie({ email: newUser.email, createdTime: Date.now() });
 
   await newUser.save();
 

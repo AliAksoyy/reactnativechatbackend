@@ -27,6 +27,10 @@ const ErrorTypes = {
     status: 401,
     message: "UNAUTHORIZED",
   },
+  USERNAME_ENTERED: {
+    status: 400,
+    message: "USERNAME_ENTERED",
+  },
 };
 
 module.exports.ErrorTypes = ErrorTypes;
