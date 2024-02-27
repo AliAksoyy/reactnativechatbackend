@@ -4,6 +4,8 @@ const dotenv = require("dotenv");
 const app = require("./app");
 const path = require("path");
 dotenv.config({ path: path.join(__dirname, "config", ".env") });
+const { Server } = require("socket.io");
+const SocketController = require("./socket/SocketController");
 
 const PORT = process.env.PORT || 5000;
 
@@ -18,6 +20,25 @@ mongoose.connection.on("connected", () => {
 mongoose.connection.on("disconnect", () => {
   console.log("MongoDb  connected rejected");
 });
+
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
+});
+
+const socketController = new SocketController(io);
+
+io.on("connection", (socket) => {
+  console.log(`Socket connection succesfully ${socket.id}`);
+
+  socket.on("disconnect", () => {
+    console.log(`Socket disconnect ${socket.id}`);
+  });
+});
+
+app.socketController = socketController;
 
 function startServer() {
   if (!server.listening) {

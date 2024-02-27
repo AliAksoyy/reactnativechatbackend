@@ -7,8 +7,12 @@ const {
 
 class AuthController {
   static register = expressAsyncHandler(async (req, res) => {
-    const { email, password } = req.body;
-    const { token, ...response } = await registerService({ email, password });
+    const { user, email, password } = req.body;
+    const { token, ...response } = await registerService({
+      user,
+      email,
+      password,
+    });
 
     res
       .cookie("token", token, { maxAge: 1000 * 60 * 60 * 24 * 30 })
