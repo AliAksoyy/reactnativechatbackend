@@ -28,7 +28,6 @@ const registerService = async ({ user, email, password }) => {
   const token = createCookie({ email: newUser.email, createdTime: Date.now() });
 
   await newUser.save();
-  console.log(newUser);
 
   return { success: true, data: newUser, token };
 };

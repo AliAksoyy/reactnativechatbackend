@@ -18,8 +18,8 @@ class RelationshipController {
   });
   static removeFriend = expressAsyncHandler(async (req, res) => {
     const { email } = req.user;
-    const { removedFriendId } = req.body;
-    const response = await removeFriendService({ email, removedFriendId });
+    const { removedFriendEmail } = req.body;
+    const response = await removeFriendService({ email, removedFriendEmail });
 
     res.json(response);
   });
@@ -31,8 +31,8 @@ class RelationshipController {
   });
   static sendFriendRequest = expressAsyncHandler(async (req, res) => {
     const { email } = req.user;
-    const { sendedUserId } = req.body;
-    const response = await sendFriendRequestService({ email, sendedUserId });
+    const { sendedEmail } = req.body;
+    const response = await sendFriendRequestService({ email, sendedEmail });
 
     res.json(response);
   });
@@ -44,17 +44,17 @@ class RelationshipController {
   });
   static acceptFriendRequest = expressAsyncHandler(async (req, res) => {
     const { email } = req.user;
-    const { acceptUserId } = req.body;
-    const response = await acceptFriendRequestService({ email, acceptUserId });
+    const { acceptEmail } = req.body;
+    const response = await acceptFriendRequestService({ email, acceptEmail });
 
     res.json(response);
   });
   static rejectFriendRequest = expressAsyncHandler(async (req, res) => {
     const { email } = req.user;
-    const { rejectedUserId } = req.body;
+    const { rejectedEmail } = req.body;
     const response = await rejectFriendRequestService({
       email,
-      rejectedUserId,
+      rejectedEmail,
     });
 
     res.json(response);
