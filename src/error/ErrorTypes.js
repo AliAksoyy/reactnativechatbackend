@@ -31,6 +31,11 @@ const ErrorTypes = {
     status: 400,
     message: "USERNAME_ENTERED",
   },
+  USER_CANNOT_HAVE_MORE_FRIENDS: {
+    status: 400,
+    message: "USER_CANNOT_HAVE_MORE_FRIENDS",
+  },
+  USER_NOT_FOUND: { status: 404, message: "USER_NOT_FOUND" },
 };
 
 module.exports.ErrorTypes = ErrorTypes;

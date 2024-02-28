@@ -1,3 +1,5 @@
+const CustomError = require("../error/CustomError");
+const { ErrorTypes } = require("../error/ErrorTypes");
 const { RelationshipModel } = require("../models/RelationshipModel");
 const { UserModel } = require("../models/UserModel");
 
@@ -43,23 +45,31 @@ const getFriendsRequestService = async ({ email }) => {
   return { success: true, data: friendRequests };
 };
 const sendFriendRequestService = async ({ email, sendedEmail }) => {
-  const user = await RelationshipModel.findOneAndUpdate(
-    { email },
-    {
-      $push: { sentFriendRequestList: sendedEmail },
-    },
-    { new: true, upsert: true }
-  );
+  if (email == sendedEmail) {
+    throw new CustomError(ErrorTypes.USER_CANNOT_HAVE_MORE_FRIENDS);
+  }
+
+  if (!(await UserModel.exists({ email: sendedEmail }))) {
+    throw new CustomError(ErrorTypes.USER_NOT_FOUND);
+  }
 
   await RelationshipModel.findOneAndUpdate(
     { email: sendedEmail },
     {
-      $push: { friendRequestList: email },
+      $addToSet: { friendRequestList: email },
     },
     { new: true, upsert: true }
-  ).populate("friendRequests");
+  ).lean();
 
-  return { success: true, data: user.sentFriendRequestList };
+  await RelationshipModel.findOneAndUpdate(
+    { email },
+    {
+      $addToSet: { sentFriendRequestList: sendedEmail },
+    },
+    { new: true, upsert: true }
+  ).lean();
+
+  return { success: true, data: "FRIEND_REQUEST_SENDED_TO_" + sendedEmail };
 };
 const getSentFriendRequestService = async ({ email }) => {
   const { sentFriendRequests } = await RelationshipModel.findOneAndUpdate(
@@ -71,10 +81,10 @@ const getSentFriendRequestService = async ({ email }) => {
   return { success: true, data: sentFriendRequests };
 };
 const acceptFriendRequestService = async ({ email, acceptEmail }) => {
-  const user = await RelationshipModel.findOneAndUpdate(
+  const { friends } = await RelationshipModel.findOneAndUpdate(
     { email },
     {
-      $push: {
+      $addToSet: {
         friendList: acceptEmail,
       },
       $pull: {
@@ -82,38 +92,39 @@ const acceptFriendRequestService = async ({ email, acceptEmail }) => {
       },
     },
     { new: true, upsert: true }
-  );
+  ).populate("friends");
+
   await RelationshipModel.findOneAndUpdate(
     { email: acceptEmail },
     {
+      $addToSet: {
+        friendList: email,
+      },
       $pull: {
         sentFriendRequestList: email,
       },
-      $push: {
-        friendList: email,
-      },
     },
     { new: true, upsert: true }
-  ).populate("sentFriendRequests");
+  );
 
-  return { success: true, data: user };
+  return { success: true, data: friends };
 };
 const rejectFriendRequestService = async ({ email, rejectedEmail }) => {
-  const user = await RelationshipModel.findOneAndUpdate(
+  const { friendRequests } = await RelationshipModel.findOneAndUpdate(
     { email },
     {
       $pull: { friendRequestList: rejectedEmail },
     },
     { new: true, upsert: true }
-  );
+  ).populate("friendRequests");
 
   await RelationshipModel.findOneAndUpdate(
     { email: rejectedEmail },
     { $pull: { sentFriendRequestList: email } },
     { new: true, upsert: true }
-  ).populate("sentFriendRequestList");
+  );
 
-  return { success: true, data: user };
+  return { success: true, data: friendRequests };
 };
 
 module.exports = {
