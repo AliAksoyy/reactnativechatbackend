@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const RelationshipSchema = new mongoose.Schema({
-  userId: {
+  email: {
     type: String,
     unique: true,
   },
@@ -15,19 +15,19 @@ const RelationshipSchema = new mongoose.Schema({
 RelationshipSchema.virtual("friends", {
   ref: "UserModel",
   localField: "friendList",
-  foreignField: "userId",
+  foreignField: "email",
 });
 
 RelationshipSchema.virtual("friendRequests", {
   ref: "UserModel",
   localField: "friendRequestList",
-  foreignField: "userId",
+  foreignField: "email",
 });
 
 RelationshipSchema.virtual("sentFriendRequests", {
   ref: "UserModel",
   localField: "sentFriendRequestList",
-  foreignField: "userId",
+  foreignField: "email",
 });
 
 module.exports.RelationshipModel = mongoose.model(

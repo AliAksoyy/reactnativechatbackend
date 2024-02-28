@@ -11,37 +11,51 @@ const {
 
 class RelationshipController {
   static getFriends = expressAsyncHandler(async (req, res) => {
-    const response = await getFriendsService();
+    const { email } = req.user;
+    const response = await getFriendsService({ email });
 
     res.json(response);
   });
   static removeFriend = expressAsyncHandler(async (req, res) => {
-    const response = await removeFriendService();
+    const { email } = req.user;
+    const { removedFriendId } = req.body;
+    const response = await removeFriendService({ email, removedFriendId });
 
     res.json(response);
   });
   static getFriendsRequest = expressAsyncHandler(async (req, res) => {
-    const response = await getFriendsRequestService();
+    const { email } = req.user;
+    const response = await getFriendsRequestService({ email });
 
     res.json(response);
   });
   static sendFriendRequest = expressAsyncHandler(async (req, res) => {
-    const response = await sendFriendRequestService();
+    const { email } = req.user;
+    const { sendedUserId } = req.body;
+    const response = await sendFriendRequestService({ email, sendedUserId });
 
     res.json(response);
   });
   static getSentFriendRequest = expressAsyncHandler(async (req, res) => {
-    const response = await getSentFriendRequestService();
+    const { email } = req.user;
+    const response = await getSentFriendRequestService({ email });
 
     res.json(response);
   });
   static acceptFriendRequest = expressAsyncHandler(async (req, res) => {
-    const response = await acceptFriendRequestService();
+    const { email } = req.user;
+    const { acceptUserId } = req.body;
+    const response = await acceptFriendRequestService({ email, acceptUserId });
 
     res.json(response);
   });
   static rejectFriendRequest = expressAsyncHandler(async (req, res) => {
-    const response = await rejectFriendRequestService();
+    const { email } = req.user;
+    const { rejectedUserId } = req.body;
+    const response = await rejectFriendRequestService({
+      email,
+      rejectedUserId,
+    });
 
     res.json(response);
   });
