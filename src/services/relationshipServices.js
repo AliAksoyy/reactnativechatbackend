@@ -1,6 +1,5 @@
 const { RelationshipModel } = require("../models/RelationshipModel");
 const { UserModel } = require("../models/UserModel");
-const { generateUserId } = require("../utils/keyGenerator");
 
 const getFriendsService = async ({ email }) => {
   const { friends } = await RelationshipModel.findOneAndUpdate(
@@ -12,7 +11,7 @@ const getFriendsService = async ({ email }) => {
   return { success: true, data: friends };
 };
 const removeFriendService = async ({ email, removedFriendEmail }) => {
-  const user = await RelationshipModel.findOneAndUpdate(
+  const { friends } = await RelationshipModel.findOneAndUpdate(
     { email },
     {
       $pull: {
@@ -20,21 +19,19 @@ const removeFriendService = async ({ email, removedFriendEmail }) => {
       },
     },
     { new: true, upsert: true }
+  ).populate("friends");
+
+  await RelationshipModel.findOneAndUpdate(
+    { email: removedFriendEmail },
+    {
+      $pull: {
+        friendList: email,
+      },
+    },
+    { new: true, upsert: true }
   );
 
-  (
-    await RelationshipModel.findOneAndUpdate(
-      { email: removedFriendEmail },
-      {
-        $pull: {
-          friendList: email,
-        },
-      },
-      { new: true, upsert: true }
-    )
-  ).populated("friends");
-
-  return { success: true, data: user };
+  return { success: true, data: friends };
 };
 const getFriendsRequestService = async ({ email }) => {
   const { friendRequests } = await RelationshipModel.findOneAndUpdate(
