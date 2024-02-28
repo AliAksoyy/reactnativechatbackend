@@ -28,11 +28,14 @@ const registerService = async ({ user, email, password }) => {
   const token = createCookie({ email: newUser.email, createdTime: Date.now() });
 
   await newUser.save();
+  console.log(newUser);
 
   return { success: true, data: newUser, token };
 };
 const loginService = async ({ email, password }) => {
-  const user = await UserModel.findOne({ email }).select("email password");
+  const user = await UserModel.findOne({ email }).select(
+    "userId userName email password"
+  );
 
   if (!user) {
     throw new CustomError(ErrorTypes.USER_NOT_FOUND);
